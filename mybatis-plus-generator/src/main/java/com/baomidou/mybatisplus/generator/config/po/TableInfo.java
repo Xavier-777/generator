@@ -18,11 +18,13 @@ package com.baomidou.mybatisplus.generator.config.po;
 import com.baomidou.mybatisplus.annotation.*;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
+import com.baomidou.mybatisplus.generator.MysqlGenerator;
 import com.baomidou.mybatisplus.generator.config.GlobalConfig;
 import com.baomidou.mybatisplus.generator.config.StrategyConfig;
 import com.baomidou.mybatisplus.generator.config.builder.ConfigBuilder;
 import com.baomidou.mybatisplus.generator.config.builder.Entity;
 import com.baomidou.mybatisplus.generator.config.rules.IColumnType;
+import com.baomidou.mybatisplus.generator.orm.OrmType;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
@@ -226,7 +228,14 @@ public class TableInfo {
             this.importPackages.add(Serializable.class.getCanonicalName());
         }
         if (this.isConvert()) {
-            this.importPackages.add(TableName.class.getCanonicalName());
+            //使用的是 Mybatis-plus 框架才加
+            if (MysqlGenerator.nowOrm.equals(OrmType.Mybatis_plus.getName())) {
+                this.importPackages.add(TableName.class.getCanonicalName());
+            }
+            //Hand框架 使用这个
+            if (MysqlGenerator.nowOrm.equals(OrmType.Hand.getName())){
+                this.importPackages.add("javax.persistence.Table");
+            }
         }
         IdType idType = entity.getIdType();
         if (null != idType && this.isHavePrimaryKey()) {
@@ -240,13 +249,16 @@ public class TableInfo {
                 importPackages.add(columnType.getPkg());
             }
             if (field.isKeyFlag()) {
-                // 主键
-                if (field.isConvert() || field.isKeyIdentityFlag()) {
-                    importPackages.add(TableId.class.getCanonicalName());
-                }
-                // 自增
-                if (field.isKeyIdentityFlag()) {
-                    importPackages.add(IdType.class.getCanonicalName());
+                //使用的是 Mybatis-plus 框架才加这些
+                if (MysqlGenerator.nowOrm.equals(OrmType.Mybatis_plus.getName())) {
+                    // 主键
+                    if (field.isConvert() || field.isKeyIdentityFlag()) {
+                        importPackages.add(TableId.class.getCanonicalName());
+                    }
+                    // 自增
+                    if (field.isKeyIdentityFlag()) {
+                        importPackages.add(IdType.class.getCanonicalName());
+                    }
                 }
             } else if (field.isConvert()) {
                 // 普通字段

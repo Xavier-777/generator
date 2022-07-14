@@ -18,9 +18,7 @@ import lombok.experimental.Accessors;
 #end
 
 /**
- * <p>
  * $!{table.comment}
- * </p>
  *
  * @author ${author}
  * @since ${date}
@@ -33,7 +31,14 @@ import lombok.experimental.Accessors;
   #end
 #end
 #if(${table.convert})
+## 使用 Mybatis-plus 框架
+#if(${ormType} == "Mybatis-plus")
 @TableName("${schemaName}${table.name}")
+#end
+## 使用 Hand 框架
+#if(${ormType} == "Hand")
+@Table("${schemaName}${table.name}")
+#end
 #end
 #if(${springdoc})
 @Schema(name = "${entity}", description = "$!{table.comment}")
@@ -72,13 +77,17 @@ public class ${entity} {
 #end
 #if(${field.keyFlag})
 ## 主键
-  #if(${field.keyIdentityFlag})
+    #if(${ormType} == "Mybatis-plus")
+    #if(${field.keyIdentityFlag})
     @TableId(value = "${field.annotationColumnName}", type = IdType.AUTO)
-  #elseif(!$null.isNull(${idType}) && "$!idType" != "")
+    #elseif(!$null.isNull(${idType}) && "$!idType" != "")
     @TableId(value = "${field.annotationColumnName}", type = IdType.${idType})
-  #elseif(${field.convert})
+    #elseif(${field.convert})
     @TableId("${field.annotationColumnName}")
-  #end
+    #end
+    #end
+    #if(${ormType} == "Hand")
+    #end
 ## 普通字段
 #elseif(${field.fill})
 ## -----   存在字段填充设置   -----

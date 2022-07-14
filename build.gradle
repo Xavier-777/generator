@@ -117,6 +117,16 @@ subprojects {
     }
 
     dependencies {
+        annotationProcessor "${lib.lombok}"
+        compileOnly "${lib.lombok}"
+
+        implementation "${lib["assertj-core"]}"
+        implementation "${lib["junit-jupiter-api"]}"
+        runtimeOnly "${lib["junit-jupiter-engine"]}"
+        implementation "org.mockito:mockito-junit-jupiter:3.4.4"
+        implementation "${lib["lagarto"]}"
+        implementation "${lib["logback-classic"]}"
+
         testAnnotationProcessor "${lib.lombok}"
         testCompileOnly "${lib.lombok}"
 

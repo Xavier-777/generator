@@ -57,7 +57,8 @@ public class GlobalConfig {
     /**
      * 作者
      */
-    private String author = "baomidou";
+//    private String author = "baomidou";
+    private String author = null;
 
     /**
      * 开启 Kotlin 模式（默认 false）
